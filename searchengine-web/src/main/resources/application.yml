@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
+  application:
+    name: searchengine-web
+  thymeleaf:
+    cache: false
+    mode: HTML
+
+root:
+  path: /opt/help_data/
