@@ -3,6 +3,7 @@ package top.yuyufeng.share.searchengine.utils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -32,7 +33,8 @@ public class LuceneUtils {
         LuceneUtils.path = path;
     }
 
-    private static Analyzer analyzer = new IKAnalyzer();
+    private static Analyzer analyzer = new IKAnalyzer(false);
+    private static Analyzer analyzerSA = new StandardAnalyzer(Version.LUCENE_47);
 
     public static void main(String[] args) {
        /* StationTo model = new StationTo();
@@ -57,7 +59,7 @@ public class LuceneUtils {
 
     }
 
-    public synchronized static StationTo doIndex(StationTo model) {
+    public static StationTo doIndex(StationTo model) {
         // 实例化IKAnalyzer分词器
         Directory directory = null;
         IndexWriter iwriter;
@@ -91,6 +93,7 @@ public class LuceneUtils {
             } else {
                 iwriter.updateDocument(new Term("ID", id), doc);
             }
+            model.setId(id);
             iwriter.close();
         } catch (CorruptIndexException e) {
             e.printStackTrace();
@@ -131,8 +134,6 @@ public class LuceneUtils {
             QueryParser qp = new QueryParser(Version.LUCENE_47, "KEYWORDSGROUP", analyzer);
             qp.setDefaultOperator(QueryParser.OR_OPERATOR);  // and or 跟数据库查询语法类似
             Query query = qp.parse(keyword);
-            qp.setDefaultOperator(QueryParser.OR_OPERATOR);  // and or 跟数据库查询语法类似
-
 
             TopDocs topDocs = isearcher.search(query, 1000);
             total = topDocs.totalHits;
@@ -152,16 +153,21 @@ public class LuceneUtils {
                 String zoneNameAbbr = targetDoc.get("ZONENAMEABBR");
                 String zoneNamePinYin = targetDoc.get("ZONENAMEPINYIN");
 
-                String startAreaNameHl = highlighter.getBestFragment(analyzer, "STARTAREANAME", startAreaName);
+                String startAreaNameHl = highlighter.getBestFragment(analyzerSA, "STARTAREANAME", startAreaName);
                 startAreaName = StringUtils.isEmpty(startAreaNameHl) ? startAreaName : startAreaNameHl;
+
                 String startAreaNameAbbrHl = highlighter.getBestFragment(analyzer, "STARTAREANAMEABBR", startAreaNameAbbr);
                 startAreaNameAbbr = StringUtils.isEmpty(startAreaNameAbbrHl) ? startAreaNameAbbr : startAreaNameAbbrHl;
+
                 String startAreaNamePinYinHl = highlighter.getBestFragment(analyzer, "STARTAREANAMEPINYIN", startAreaNamePinYin);
                 startAreaNamePinYin = StringUtils.isEmpty(startAreaNamePinYinHl) ? startAreaNamePinYin : startAreaNamePinYinHl;
-                String zoneNameHl = highlighter.getBestFragment(analyzer, "ZONENAME", zoneName);
+
+                String zoneNameHl = highlighter.getBestFragment(analyzerSA, "ZONENAME", zoneName);
                 zoneName = StringUtils.isEmpty(zoneNameHl) ? zoneName : zoneNameHl;
+
                 String zoneNameAbbrHl = highlighter.getBestFragment(analyzer, "ZONENAMEABBR", zoneNameAbbr);
                 zoneNameAbbr = StringUtils.isEmpty(zoneNameAbbrHl) ? zoneNameAbbr : zoneNameAbbrHl;
+
                 String zoneNamePinYinHl = highlighter.getBestFragment(analyzer, "ZONENAMEPINYIN", zoneNamePinYin);
                 zoneNamePinYin = StringUtils.isEmpty(zoneNamePinYinHl) ? zoneNamePinYin : zoneNamePinYinHl;
 

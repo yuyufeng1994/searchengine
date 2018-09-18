@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="includes/header::header">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-expand-lg hp-nav">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button aria-expanded="false" class="navbar-toggle collapsed" data-target="#bs-example-navbar-collapse-1"
+                    data-toggle="collapse" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand hp-nav-brand" href="/"><b>BBKB</b></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li><a href="#">Test</a></li>
+            </ul>
+            <!-- <form class="navbar-form navbar-left">
+                 <div class="form-group">
+                     <input type="text" class="form-control" placeholder="Search">
+                 </div>
+                 <button type="submit" class="btn btn-default">立即搜索</button>
+             </form>-->
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <br/>
+    <input type="text" id="input-value"
+           style="border: 1px solid #cccccc;width: 500px;height: 40px;line-height: 40px;font-size: 25px;" onkeyup="getDataList()"/>
+    <ul class="list-group" id="list-result">
+
+    </ul>
+</div>
+</body>
+<script>
+    function getDataList() {
+        $("#list-result").html("")
+        if($("#input-value").val().trim() == ''){
+            return;
+        }
+        $.get("/searchBykeyWords?page=1&keywords=" + $("#input-value").val().trim(), function (res) {
+            var str='';
+
+            for (var i = 0; i < res.list.length; i++) {
+                var stationto = res.list[i]
+                console.log(stationto)
+                str += '<li class="list-group-item">'+stationto.keywordsGroup;+'</li>'
+            }
+
+            $("#list-result").html(str)
+        })
+    }
+</script>
+</html>

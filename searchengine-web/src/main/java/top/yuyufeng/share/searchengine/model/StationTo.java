@@ -104,7 +104,8 @@ public class StationTo {
     }
 
     public String getKeywordsGroup() {
-        return startAreaName+" "+startAreaNameAbbr+" "+startAreaNamePinYin+" "+zoneName+" "+zoneNameAbbr+" "+zoneNamePinYin;
+
+        return startAreaName+" "+startAreaNameAbbr+" "+startAreaNamePinYin+" "+zoneName+" "+zoneNameAbbr+" "+zoneNamePinYin+" "+startAreaName.replaceAll("", " ")+" "+zoneName.replaceAll("", " ");
     }
 
     public void setKeywordsGroup(String keywordsGroup) {
@@ -124,5 +125,11 @@ public class StationTo {
                 ", zoneNameAbbr='" + zoneNameAbbr + '\'' +
                 ", zoneNamePinYin='" + zoneNamePinYin + '\'' +
                 '}';
+    }
+
+    public static void main(String[] args) {
+        String name = "平湖市";
+        name = name.replaceAll("", " ");
+        System.out.println(name);
     }
 }
