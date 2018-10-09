@@ -24,7 +24,7 @@ public class CommonAnalyzers {
         TokenStream ts = null;
         try {
             ts = analyzer.tokenStream("myfield", new StringReader(
-                    "周杰伦是一个歌手，也是一个演员。"));
+                    "林书豪和周杰伦担任近期的《这就是灌篮》综艺节目。"));
             // 获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);
             // 获取词元文本属性
